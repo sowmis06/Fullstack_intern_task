@@ -1,21 +1,25 @@
-const path = require("path");
+const dotenv = require("dotenv").config();
 
 module.exports = {
-  client: "sqlite3",
+  client: "pg",
+
   connection: {
-    filename: path.join(__dirname, "database", "templatehub.sqlite"),
-  },
-  useNullAsDefault: true,
-  migrations: {
-    directory: path.join(__dirname, "database", "migrations"),
-  },
-  seeds: {
-    directory: path.join(__dirname, "database", "seeds"),
-  },
-  pool: {
-    afterCreate: (connection, done) => {
-      connection.exec("PRAGMA foreign_keys = ON");
-      done();
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false,
     },
+  },
+
+  pool: {
+    min: 0,
+    max: 5,
+  },
+
+  migrations: {
+    directory: "./database/migrations",
+  },
+
+  seeds: {
+    directory: "./database/seeds",
   },
 };
